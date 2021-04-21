@@ -1204,9 +1204,9 @@ void HandleRoot(void)
     WSContentSpaceButton(BUTTON_FIRMWARE_UPGRADE);
     WSContentButton(BUTTON_CONSOLE);
 #else
-    WSContentSpaceButton(BUTTON_CONFIGURATION);
+    WSContentSpaceButton(BUTTON_FIRMWARE_UPGRADE);
     WSContentButton(BUTTON_INFORMATION);
-    WSContentButton(BUTTON_FIRMWARE_UPGRADE);
+    WSContentButton(BUTTON_CONFIGURATION);
     if (!WebUseManagementSubmenu()) {
       WSContentButton(BUTTON_CONSOLE);
     } else {
