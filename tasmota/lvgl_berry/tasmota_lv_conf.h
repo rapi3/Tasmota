@@ -37,7 +37,7 @@
  * Useful if the display has a 8 bit interface (e.g. SPI)*/
 //  #define LV_COLOR_16_SWAP   1
 // #if defined(ADAFRUIT_PYPORTAL)
-//  #define LV_COLOR_16_SWAP   1
+#define LV_COLOR_16_SWAP   1          // needed for DMA transfer
 // #else
 //  #define LV_COLOR_16_SWAP   0
 // #endif
@@ -87,7 +87,7 @@ typedef int16_t lv_coord_t;
  * The graphical objects and other related data are stored here. */
 
 /* 1: use custom malloc/free, 0: use the built-in `lv_mem_alloc` and `lv_mem_free` */
-#define LV_MEM_CUSTOM      0
+#define LV_MEM_CUSTOM      1
 #if LV_MEM_CUSTOM == 0
 /* Size of the memory used by `lv_mem_alloc` in bytes (>= 2kB)*/
 #ifdef ARDUINO_SAMD_ZERO
@@ -106,9 +106,9 @@ typedef int16_t lv_coord_t;
 /* Automatically defrag. on free. Defrag. means joining the adjacent free cells. */
 #  define LV_MEM_AUTO_DEFRAG  1
 #else       /*LV_MEM_CUSTOM*/
-#  define LV_MEM_CUSTOM_INCLUDE <stdlib.h>   /*Header for the dynamic memory function*/
-#  define LV_MEM_CUSTOM_ALLOC   malloc       /*Wrapper to malloc*/
-#  define LV_MEM_CUSTOM_FREE    free         /*Wrapper to free*/
+#  define LV_MEM_CUSTOM_INCLUDE <tasmota_lv_stdlib.h>   /*Header for the dynamic memory function*/
+#  define LV_MEM_CUSTOM_ALLOC   lvbe_malloc       /*Wrapper to malloc*/ /* PSRAM support */
+#  define LV_MEM_CUSTOM_FREE    lvbe_free         /*Wrapper to free*/
 #endif     /*LV_MEM_CUSTOM*/
 
 /* Use the standard memcpy and memset instead of LVGL's own functions.
@@ -425,8 +425,8 @@ typedef void * lv_indev_drv_user_data_t;            /*Type of user data in the i
 
 /*Pixel perfect monospace font
  * http://pelulamu.net/unscii/ */
-#define LV_FONT_UNSCII_8     0
-#define LV_FONT_UNSCII_16     0
+#define LV_FONT_UNSCII_8     1
+#define LV_FONT_UNSCII_16     1
 
 /* Optionally declare your custom fonts here.
  * You can use these fonts as default font too
@@ -434,7 +434,19 @@ typedef void * lv_indev_drv_user_data_t;            /*Type of user data in the i
  * #define LV_FONT_CUSTOM_DECLARE LV_FONT_DECLARE(my_font_1) \
  *                                LV_FONT_DECLARE(my_font_2)
  */
-#define LV_FONT_CUSTOM_DECLARE
+// Tasmota specific
+#define LV_FONT_CUSTOM_DECLARE    LV_FONT_DECLARE(seg7_8) \
+                                  LV_FONT_DECLARE(seg7_10) \
+                                  LV_FONT_DECLARE(seg7_12) \
+                                  LV_FONT_DECLARE(seg7_14) \
+                                  LV_FONT_DECLARE(seg7_16) \
+                                  LV_FONT_DECLARE(seg7_18) \
+                                  LV_FONT_DECLARE(seg7_20) \
+                                  LV_FONT_DECLARE(seg7_24) \
+                                  LV_FONT_DECLARE(seg7_28) \
+                                  LV_FONT_DECLARE(seg7_36) \
+                                  LV_FONT_DECLARE(seg7_48) \
+
 
 /* Enable it if you have fonts with a lot of characters.
  * The limit depends on the font size, font face and bpp
