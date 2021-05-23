@@ -605,10 +605,11 @@ void MqttPublishLoggingAsync(bool refresh) {
   char* line;
   size_t len;
   while (GetLog(Settings.mqttlog_level, &index, &line, &len)) {
-    strlcpy(TasmotaGlobal.mqtt_data, line, len);  // No JSON and ugly!!
     char stopic[TOPSZ];
     GetTopic_P(stopic, STAT, TasmotaGlobal.mqtt_topic, PSTR("LOGGING"));
-    MqttPublishLib(stopic, (const uint8_t*)TasmotaGlobal.mqtt_data, strlen(TasmotaGlobal.mqtt_data), false);
+//    strlcpy(TasmotaGlobal.mqtt_data, line, len);  // No JSON and ugly!!
+//    MqttPublishLib(stopic, (const uint8_t*)TasmotaGlobal.mqtt_data, strlen(TasmotaGlobal.mqtt_data), false);
+    MqttPublishLib(stopic, (const uint8_t*)line, len -1, false);
   }
 }
 
@@ -1288,12 +1289,11 @@ void CmndPublish(void) {
       strlcpy(stemp1, mqtt_part, sizeof(stemp1));
       ReplaceChar(stemp1, '#', ' ');
       if ((payload_part != nullptr) && strlen(payload_part)) {
-        strlcpy(TasmotaGlobal.mqtt_data, payload_part, sizeof(TasmotaGlobal.mqtt_data));
+        Response_P(payload_part);
       } else {
         ResponseClear();
       }
       MqttPublish(stemp1, (XdrvMailbox.index == 2));
-//      ResponseCmndDone();
       ResponseClear();
     }
   }
