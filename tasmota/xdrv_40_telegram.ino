@@ -299,11 +299,15 @@ String TelegramExecuteCommand(const char *svalue) {
     char* JSON = (char*)memchr(line, '{', len);
     if (JSON) {  // Is it a JSON message (and not only [15:26:08 MQT: stat/wemos5/POWER = O])
       size_t JSONlen = len - (JSON - line);
-      if (JSONlen > ResponseSize()) { JSONlen = ResponseSize(); }
-      char stemp[JSONlen];
-      strlcpy(stemp, JSON +1, JSONlen -2);
       if (cflg) { response += F(","); }
-      response += stemp;
+
+//      response.concat(JSON +1, JSONlen -3);
+      len -= 2;
+      char dummy = line[len];
+      line[len] = '\0';                  // Add terminating \'0'
+      response.concat(JSON +1);
+      line[len] = dummy;
+
       cflg = true;
     }
   }
